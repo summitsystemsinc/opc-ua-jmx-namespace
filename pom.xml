@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.summit.opc.ua.jmx</groupId>
+	<artifactId>opc-ua-jmx-namespace-parent</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<name>OPC-UA :: Namespace :: JMX :: Parent</name>
+	<description>Parent module for OPC-UA JMX Namespace.</description>
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License</name>
+			<url>https://www.gnu.org/licenses/agpl-3.0.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>license-header-check</id>
+						<goals>
+							<goal>check-file-header</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<licenseName>agpl_v3</licenseName>
+					<organizationName>Summit Management Systems, Inc.</organizationName>
+					<inceptionYear>2016</inceptionYear>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.digitalpetri.opcua</groupId>
+				<artifactId>ua-server</artifactId>
+				<version>0.4.3</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
