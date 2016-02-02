@@ -8,3 +8,5 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+/opc-ua-jmx-namespace/nbproject/
+/opc-ua-jmx-namespace/security/
