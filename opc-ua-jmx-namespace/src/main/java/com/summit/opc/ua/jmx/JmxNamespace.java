@@ -51,14 +51,11 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.PeekingIterator;
-import com.summit.opc.ua.jmx.types.BooleanTypeNodeFactory;
-import com.summit.opc.ua.jmx.types.StringTypeNodeFactory;
+import com.summit.opc.ua.jmx.types.DefaultTypes;
 import com.summit.opc.ua.jmx.types.TypeNodeFactory;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -94,15 +91,7 @@ public class JmxNamespace implements UaNamespace {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JmxNamespace.class);
 
 	public static final String DEFAULT_NAMESPACE_URI = "urn:opcua:jmx";
-	private static final Set<TypeNodeFactory> DEFAULT_TYPE_FACTORIES;
 
-	static {
-		Set<TypeNodeFactory> types = new HashSet<>();
-		types.add(new StringTypeNodeFactory());
-		types.add(new BooleanTypeNodeFactory());
-
-		DEFAULT_TYPE_FACTORIES = Collections.unmodifiableSet(types);
-	}
 	private final String namespaceUri;
 	private final OpcUaServer server;
 	private final UShort namespaceIndex;
@@ -128,7 +117,7 @@ public class JmxNamespace implements UaNamespace {
 			MBeanServerConnection mBeanServerConnection) {
 		this(server, namespaceIndex, DEFAULT_NAMESPACE_URI,
 				ManagementFactory.getPlatformMBeanServer(),
-				DEFAULT_TYPE_FACTORIES);
+				DefaultTypes.DEFAULT_TYPE_FACTORIES);
 	}
 
 	public JmxNamespace(OpcUaServer server,

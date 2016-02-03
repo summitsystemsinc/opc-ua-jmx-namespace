@@ -20,31 +20,49 @@ package com.summit.opc.ua.jmx.types;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-import com.digitalpetri.opcua.sdk.server.model.UaNode;
+
+#set( $types = [
+	["String","java.lang.String","String"],
+	["Integer","int","UInt32"],
+	["Long","long","UInt64"],
+	["Double","double","Double"],
+	["Boolean","boolean","Boolean"]
+])
+
 import com.digitalpetri.opcua.sdk.server.model.UaVariableNode;
 import com.digitalpetri.opcua.stack.core.Identifiers;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.management.MBeanAttributeInfo;
 import javax.management.ObjectName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author Justin
- */
-public class StringTypeNodeFactory extends AbstractTypeNodeFactory implements TypeNodeFactory {
-
-	public static final String STRING_TYPE = String.class.getName();
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(StringTypeNodeFactory.class);
-
-	@Override
-	public UaVariableNode buildNode(String path, ObjectName on, MBeanAttributeInfo info) {
-		return buildNodeWithType(path, on, info, Identifiers.String);
+public class DefaultTypes {
+	public static final Set<TypeNodeFactory> DEFAULT_TYPE_FACTORIES;
+	static{
+		Set<TypeNodeFactory> types = new HashSet<>();
+		#foreach ($type in $types)
+		types.add(new $type[0]TypeFactory());
+		#end
+		DEFAULT_TYPE_FACTORIES = Collections.unmodifiableSet(types);
 	}
+	
+	#foreach ($type in $types)
+	public static class $type[0]TypeFactory extends AbstractTypeNodeFactory{
 
-	@Override
-	public String[] getSupportedTypes() {
-		return new String[]{STRING_TYPE};
+		public static final String JMX_TYPE = "$type[1]";
+
+		@Override
+		public String[] getSupportedTypes() {
+			return new String[]{JMX_TYPE};
+		}
+
+		@Override
+		public UaVariableNode buildNode(String path, ObjectName on, MBeanAttributeInfo info) {
+			return buildNodeWithType(path, on, info, Identifiers.$type[2]);
+		}
 	}
+	#end
 }
