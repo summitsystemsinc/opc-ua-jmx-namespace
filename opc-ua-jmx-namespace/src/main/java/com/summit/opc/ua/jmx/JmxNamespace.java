@@ -53,6 +53,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.PeekingIterator;
 import com.summit.opc.ua.jmx.types.DefaultTypes;
 import com.summit.opc.ua.jmx.types.TypeNodeFactory;
+import com.udojava.jmx.wrapper.JMXBeanWrapper;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
@@ -64,10 +65,16 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import org.slf4j.Logger;
@@ -143,6 +150,18 @@ public class JmxNamespace implements UaNamespace {
 		this.namespaceUri = namespaceUri;
 		this.mBeanServer = mBeanServerConnection;
 		this.refreshWorker = new JmxAttributeRefreshWorker(refreshRate, mBeanServer);
+		MBeanServer localMBeanServer = ManagementFactory.getPlatformMBeanServer();
+		try {
+			ObjectName on = new ObjectName(refreshWorker.getClass().getPackage().getName() + ":type=" + refreshWorker.getClass().getSimpleName());
+			localMBeanServer.registerMBean(new JMXBeanWrapper(this.refreshWorker), on);
+
+		} catch (MalformedObjectNameException |
+				IntrospectionException |
+				InstanceAlreadyExistsException |
+				MBeanRegistrationException |
+				NotCompliantMBeanException ex) {
+			LOGGER.warn(ex.getMessage(), ex);
+		}
 
 		supportedTypes.stream().forEach((tnf) -> {
 			tnf.setMBeanServerConnection(mBeanServer);

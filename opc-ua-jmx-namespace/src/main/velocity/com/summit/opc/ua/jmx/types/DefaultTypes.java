@@ -23,8 +23,8 @@ package com.summit.opc.ua.jmx.types;
 
 #set( $types = [
 	["String","java.lang.String","String"],
-	["Integer","int","UInt32"],
-	["Long","long","UInt64"],
+	["Integer","int","Int32"],
+	["Long","long","Int64"],
 	["Double","double","Double"],
 	["Boolean","boolean","Boolean"]
 ])

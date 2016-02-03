@@ -3,10 +3,14 @@ package com.summit.opc.ua.jmx;
 import com.digitalpetri.opcua.sdk.server.model.UaNode;
 import com.summit.opc.ua.jmx.types.AbstractTypeNodeFactory;
 import com.summit.opc.ua.jmx.types.TypeNodeFactory;
+import com.udojava.jmx.wrapper.JMXBean;
+import com.udojava.jmx.wrapper.JMXBeanAttribute;
+import com.udojava.jmx.wrapper.JMXBeanOperation;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -43,7 +47,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author Justin
  */
-public class JmxAttributeRefreshWorker implements Runnable, TypeNodeFactory.UnavailableNodeListener {
+@JMXBean(description = "JMX Attribute refresh worker.  "
+		+ "Updates JMX values to OPC nodes")
+public class JmxAttributeRefreshWorker implements Runnable,
+		TypeNodeFactory.UnavailableNodeListener {
 
 	private static final Logger LOGGER
 			= LoggerFactory.getLogger(JmxAttributeRefreshWorker.class);
@@ -89,23 +96,48 @@ public class JmxAttributeRefreshWorker implements Runnable, TypeNodeFactory.Unav
 		this.polledAttributes.remove(polledAttribute);
 	}
 
+	@JMXBeanOperation(name = "Start Refresh", description = "Start the "
+			+ "refresh thread. Only works if not running.")
 	public void start() {
 		if (future == null || future.isDone() || future.isCancelled()) {
+			LOGGER.info("Starting JMX-UA Refresh task with {}ms delay.", getRefreshMs());
 			future = SCHEDULED_THREAD.scheduleWithFixedDelay(this,
 					0, getRefreshMs(),
 					TimeUnit.MILLISECONDS);
 		}
 	}
 
+	@JMXBeanAttribute(description = "Number of JMX attributes that threw a Java"
+			+ "Exception when we tried to read them.")
+	public int getNumberUnavailableNodes() {
+		return unavailableNodes.size();
+	}
+
+	@JMXBeanAttribute(description = "Names/Paths of nodes that threw a Java"
+			+ "Exception when we tried to read them.")
+	public String[] getUnavailableNodeNames() {
+		Set<String> retVal = new TreeSet<>();
+
+		unavailableNodes.stream().forEach((n) -> {
+			retVal.add(n.getNodeId().getIdentifier().toString());
+		});
+
+		return retVal.toArray(new String[retVal.size()]);
+	}
+
+	@JMXBeanOperation(name = "Stop Refresh", description = "Stop the "
+			+ "refresh thread.")
 	public void stop() {
 		if (future != null) {
+			LOGGER.info("Stopping JMX-UA task.");
 			future.cancel(true);
 		}
 	}
 
 	@Override
 	public void run() {
-		LOGGER.debug("Refreshing {} JMX Attributes to nodes with {} unavailable.", polledAttributes.size(), unavailableNodes.size());
+		LOGGER.debug("Refreshing {} JMX Attributes to nodes with {} unavailable.", 
+				polledAttributes.size(), unavailableNodes.size());
 		long startTime = System.currentTimeMillis();
 
 		Iterator<JmxPolledAttribute> iter = polledAttributes.iterator();
@@ -114,7 +146,11 @@ public class JmxAttributeRefreshWorker implements Runnable, TypeNodeFactory.Unav
 			if (!unavailableNodes.contains(jpa.getNode())) {
 				try {
 					AbstractTypeNodeFactory.setNodeValue(jpa.getObjectName(), jpa.getAttributeName(), jpa.getNode(), mBeanServerConnection, false);
-				} catch (InstanceNotFoundException | MBeanException | AttributeNotFoundException | ReflectionException | IOException ex) {
+				} catch (InstanceNotFoundException | 
+						MBeanException | 
+						AttributeNotFoundException | 
+						ReflectionException | 
+						IOException ex) {
 					LOGGER.warn(ex.getMessage(), ex);
 				}
 			}
@@ -127,6 +163,7 @@ public class JmxAttributeRefreshWorker implements Runnable, TypeNodeFactory.Unav
 	/**
 	 * @return the refreshMs
 	 */
+	@JMXBeanAttribute
 	public int getRefreshMs() {
 		return refreshMs;
 	}
@@ -134,8 +171,12 @@ public class JmxAttributeRefreshWorker implements Runnable, TypeNodeFactory.Unav
 	/**
 	 * @param refreshMs the refreshMs to set
 	 */
+	@JMXBeanAttribute(description
+			= "Interval this refresh worker is triggered, in milliseconds.")
 	public void setRefreshMs(int refreshMs) {
+		stop();
 		this.refreshMs = refreshMs;
+		start();
 	}
 
 	/**
