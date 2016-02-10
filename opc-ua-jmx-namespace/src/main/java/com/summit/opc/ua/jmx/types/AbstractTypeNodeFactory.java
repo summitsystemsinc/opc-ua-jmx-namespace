@@ -58,17 +58,30 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractTypeNodeFactory implements TypeNodeFactory {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTypeNodeFactory.class);
-	public static void setNodeValue(ObjectName on, String attributeName, UaVariableNode node, MBeanServerConnection mbsc, boolean force) throws InstanceNotFoundException, MBeanException, AttributeNotFoundException, ReflectionException, IOException {
+
+	public static void setNodeValue(
+			ObjectName on,
+			String attributeName,
+			UaVariableNode node,
+			MBeanServerConnection mbsc,
+			boolean force)
+			throws InstanceNotFoundException, MBeanException,
+			AttributeNotFoundException, ReflectionException, IOException {
 		final Object attributeValue = mbsc.getAttribute(on, attributeName);
+		
 		if (force) {
 			forceNodeValue(node, attributeValue);
+			//This is ugly... can we do something better?
 		} else if (node.getValue() == null
 				|| node.getValue().getValue() == null
 				|| (node.getValue().getValue().getValue() == null && attributeValue != null)
+				|| (node.getValue().getValue().getValue() != null && attributeValue == null)
+				|| (node.getValue().getValue().getValue() == null && attributeValue == null)
 				|| !node.getValue().getValue().getValue().equals(attributeValue)) {
 			forceNodeValue(node, attributeValue);
 		}
 	}
+
 	private static void forceNodeValue(UaVariableNode node, final Object attributeValue) {
 		node.setValue(new DataValue(new Variant(attributeValue)));
 	}
@@ -79,7 +92,7 @@ public abstract class AbstractTypeNodeFactory implements TypeNodeFactory {
 	private final Set<AttributeObserver> observers = new HashSet<>();
 	private final Set<UnavailableNodeListener> unavailableNodeListeners
 			= Collections.newSetFromMap(new WeakHashMap<UnavailableNodeListener, Boolean>());
-	private Set<UaNode> unavailableNodes = new HashSet<>();
+	private final Set<UaNode> unavailableNodes = new HashSet<>();
 
 	/**
 	 * @return the mBeanServerConnection
@@ -139,7 +152,6 @@ public abstract class AbstractTypeNodeFactory implements TypeNodeFactory {
 	protected UaVariableNode buildNodeWithType(String path, ObjectName on, MBeanAttributeInfo info, NodeId type) {
 		return buildNodeWithType(path, on, info, type, true);
 	}
-
 
 	private void notifyNodeAvailable(UaNode node) {
 		if (unavailableNodes.contains(node)) {
@@ -202,7 +214,6 @@ public abstract class AbstractTypeNodeFactory implements TypeNodeFactory {
 
 		return node;
 	}
-
 
 	private void setNodeValue(ObjectName on, MBeanAttributeInfo info, UaVariableNode node) throws InstanceNotFoundException, MBeanException, AttributeNotFoundException, ReflectionException, IOException {
 		setNodeValue(on, info.getName(), node, mBeanServerConnection, false);
