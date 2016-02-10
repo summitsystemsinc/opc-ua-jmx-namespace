@@ -39,7 +39,6 @@ package com.summitsystemsinc.opc.ua.jmx;
  import com.digitalpetri.opcua.stack.core.types.builtin.Variant;
  import com.digitalpetri.opcua.stack.core.types.builtin.unsigned.UShort;
  import static com.digitalpetri.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
- import com.digitalpetri.opcua.stack.core.types.enumerated.TimestampsToReturn;
  import com.digitalpetri.opcua.stack.core.types.structured.EndpointDescription;
  import com.digitalpetri.opcua.stack.core.types.structured.UserTokenPolicy;
  import static com.google.common.collect.Lists.newArrayList;
@@ -73,9 +72,9 @@ package com.summitsystemsinc.opc.ua.jmx;
  * @author Justin Smith
  */
  @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class JmxNamespaceIT {
+public class JmxNamespaceTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(JmxNamespaceIT.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JmxNamespaceTest.class);
 
 	private static final int BIND_PORT = 21212;
 	private static final String ENDPOINT_URL = "opc.tcp://localhost:" + BIND_PORT;
@@ -85,8 +84,9 @@ public class JmxNamespaceIT {
 
 	private OpcUaClient client;
 
+  <% def refresh = 200 %>
 	private static final Random RANDOM = new Random();
-	private static final int REFRESH_SPEED = 200;
+	private static final int REFRESH_SPEED = $refresh;
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -130,7 +130,7 @@ public class JmxNamespaceIT {
 		UShort idx = server.getNamespaceManager().registerUri(JmxNamespace.DEFAULT_NAMESPACE_URI);
 		JmxNamespace nx = new JmxNamespace(server, idx,REFRESH_SPEED);
 		nx.startRefresh();
-		LOGGER.info(String.format("Sleeping for %s milliseconds to start refresh thread.",REFRESH_SPEED));
+		LOGGER.info("Sleeping for {} milliseconds to start refresh thread.",REFRESH_SPEED);
 		Thread.sleep(REFRESH_SPEED);
 
 		server.getNamespaceManager().addNamespace(nx);
@@ -142,9 +142,6 @@ public class JmxNamespaceIT {
 	public static void tearDownClass() {
 		server.shutdown();
 		Stack.releaseSharedResources();
-	}
-
-	public JmxNamespaceIT() {
 	}
 
 	@Before
@@ -228,7 +225,16 @@ public class JmxNamespaceIT {
 		//Test variant data against the mbean.
 		Variant v = dv.getValue();
 		LOGGER.info("DV: {}",dv);
-		assertEquals(String.format("Value for ${prim} incorrect.",exampleMBean.my_${prim},v.getValue()),exampleMBean.my_${prim},v.getValue());
+		assertEquals("Value for ${prim} incorrect.",exampleMBean.my_${prim},v.getValue());
+
+    ${prim} newVal = ${prims[prim]["rand"]};
+    LOGGER.debug("Update MBean my_${prim} to {}", newVal);
+    exampleMBean.my_${prim} = newVal;
+		LOGGER.debug("Wait for node refresh, {}ms", REFRESH_SPEED);
+    Thread.sleep(REFRESH_SPEED);
+    dv = node.readValue().get();
+    v = dv.getValue();
+		assertEquals("Value for ${prim} incorrect.",exampleMBean.my_${prim},v.getValue());
 	}
 <% } %>
 

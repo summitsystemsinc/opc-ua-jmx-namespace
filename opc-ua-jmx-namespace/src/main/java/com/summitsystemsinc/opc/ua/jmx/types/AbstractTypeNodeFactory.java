@@ -78,6 +78,7 @@ public abstract class AbstractTypeNodeFactory implements TypeNodeFactory {
 				|| (node.getValue().getValue().getValue() != null && attributeValue == null)
 				|| (node.getValue().getValue().getValue() == null && attributeValue == null)
 				|| !node.getValue().getValue().getValue().equals(attributeValue)) {
+			LOGGER.trace("Node \"{}\" change, updating to: {}", node.getNodeId(),attributeValue);
 			forceNodeValue(node, attributeValue);
 		}
 	}
