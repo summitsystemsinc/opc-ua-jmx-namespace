@@ -1,4 +1,4 @@
-package com.summit.opc.ua.jmx;
+package com.summitsystemsinc.opc.ua.jmx;
 
 /*
  * #%L
@@ -43,8 +43,8 @@ package com.summit.opc.ua.jmx;
  import com.digitalpetri.opcua.stack.core.types.structured.EndpointDescription;
  import com.digitalpetri.opcua.stack.core.types.structured.UserTokenPolicy;
  import static com.google.common.collect.Lists.newArrayList;
- import com.summit.opc.ua.jmx.types.DefaultTypes;
- import com.summit.opc.ua.jmx.types.TypeNodeFactory;
+ import com.summitsystemsinc.opc.ua.jmx.types.DefaultTypes;
+ import com.summitsystemsinc.opc.ua.jmx.types.TypeNodeFactory;
  import com.udojava.jmx.wrapper.JMXBean;
  import com.udojava.jmx.wrapper.JMXBeanAttribute;
  import com.udojava.jmx.wrapper.JMXBeanWrapper;
@@ -175,7 +175,7 @@ public class JmxNamespaceIT {
 
 		def nodeId = { String prim ->
 			def retVal = '';
-			retVal += "String nodePath = \"ns=2;s=com/summit/opc/ua/jmx/ExampleMBean/my_${prim}\";\n";
+			retVal += "String nodePath = \"ns=2;s=com/summitsystemsinc/opc/ua/jmx/ExampleMBean/my_${prim}\";\n";
 			retVal += "NodeId my_${prim}Node = NodeId.parse(nodePath);\n"
 			retVal;
 		};

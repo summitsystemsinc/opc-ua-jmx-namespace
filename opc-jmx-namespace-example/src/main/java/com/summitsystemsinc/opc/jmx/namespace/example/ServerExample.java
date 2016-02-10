@@ -1,4 +1,4 @@
-package com.summit.opc.jmx.namespace.example;
+package com.summitsystemsinc.opc.jmx.namespace.example;
 
 /*
  * #%L
@@ -38,7 +38,7 @@ import com.digitalpetri.opcua.stack.core.types.builtin.LocalizedText;
 import com.digitalpetri.opcua.stack.core.types.builtin.unsigned.UShort;
 import com.digitalpetri.opcua.stack.core.types.structured.UserTokenPolicy;
 import static com.google.common.collect.Lists.newArrayList;
-import com.summit.opc.ua.jmx.JmxNamespace;
+import com.summitsystemsinc.opc.ua.jmx.JmxNamespace;
 
 /**
  *

@@ -1,4 +1,4 @@
-package com.summit.opc.ua.jmx;
+package com.summitsystemsinc.opc.ua.jmx;
 
 /*
  * #%L
@@ -51,8 +51,8 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.PeekingIterator;
-import com.summit.opc.ua.jmx.types.DefaultTypes;
-import com.summit.opc.ua.jmx.types.TypeNodeFactory;
+import com.summitsystemsinc.opc.ua.jmx.types.DefaultTypes;
+import com.summitsystemsinc.opc.ua.jmx.types.TypeNodeFactory;
 import com.udojava.jmx.wrapper.JMXBeanWrapper;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;

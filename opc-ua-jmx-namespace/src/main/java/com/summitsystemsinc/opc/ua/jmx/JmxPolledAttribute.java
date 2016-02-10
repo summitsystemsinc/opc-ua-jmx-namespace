@@ -1,4 +1,4 @@
-package com.summit.opc.ua.jmx;
+package com.summitsystemsinc.opc.ua.jmx;
 
 /*
  * #%L

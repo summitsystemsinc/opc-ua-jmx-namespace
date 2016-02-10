@@ -1,8 +1,8 @@
-package com.summit.opc.ua.jmx;
+package com.summitsystemsinc.opc.ua.jmx;
 
 import com.digitalpetri.opcua.sdk.server.model.UaNode;
-import com.summit.opc.ua.jmx.types.AbstractTypeNodeFactory;
-import com.summit.opc.ua.jmx.types.TypeNodeFactory;
+import com.summitsystemsinc.opc.ua.jmx.types.AbstractTypeNodeFactory;
+import com.summitsystemsinc.opc.ua.jmx.types.TypeNodeFactory;
 import com.udojava.jmx.wrapper.JMXBean;
 import com.udojava.jmx.wrapper.JMXBeanAttribute;
 import com.udojava.jmx.wrapper.JMXBeanOperation;
