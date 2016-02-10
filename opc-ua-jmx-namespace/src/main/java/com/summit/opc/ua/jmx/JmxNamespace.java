@@ -65,7 +65,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
@@ -112,6 +111,15 @@ public class JmxNamespace implements UaNamespace {
 
 	private Set<String> unsupportedTypes = new TreeSet<>();
 	private Map<String, TypeNodeFactory> typesToFactories = new HashMap<>();
+
+	public JmxNamespace(OpcUaServer server, UShort namespaceIndex, int refreshMs) {
+		this(server,
+				namespaceIndex,
+				DEFAULT_NAMESPACE_URI,
+				ManagementFactory.getPlatformMBeanServer(),
+				DefaultTypes.DEFAULT_TYPE_FACTORIES,
+				refreshMs);
+	}
 
 	public JmxNamespace(OpcUaServer server, UShort namespaceIndex) {
 		this(server, namespaceIndex, DEFAULT_NAMESPACE_URI,
