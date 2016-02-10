@@ -224,13 +224,13 @@ public class JmxNamespaceTest {
 
 		//Test variant data against the mbean.
 		Variant v = dv.getValue();
-		LOGGER.info("DV: {}",dv);
+		LOGGER.debug("DV: {}",dv);
 		assertEquals("Value for ${prim} incorrect.",exampleMBean.my_${prim},v.getValue());
 
     ${prim} newVal = ${prims[prim]["rand"]};
-    LOGGER.debug("Update MBean my_${prim} to {}", newVal);
+    LOGGER.info("Update MBean my_${prim} to {}", newVal);
     exampleMBean.my_${prim} = newVal;
-		LOGGER.debug("Wait for node refresh, {}ms", REFRESH_SPEED);
+		LOGGER.info("Wait for node refresh, {}ms", REFRESH_SPEED);
     Thread.sleep(REFRESH_SPEED);
     dv = node.readValue().get();
     v = dv.getValue();
