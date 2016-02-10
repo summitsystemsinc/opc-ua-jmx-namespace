@@ -1,7 +1,7 @@
 ## Travis-CI Config
 language: java
 ## Run integration tests.
-script: "mvn verify"
+script: "mvn verify -P travis -Dnocoverage=true"
 branches:
   except:
     - gh-pages
