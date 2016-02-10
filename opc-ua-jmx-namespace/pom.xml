@@ -78,6 +78,8 @@
 					<propertiesFiles>
 						<file>${project.basedir}/src/gconfigs/config.groovy</file>
 					</propertiesFiles>
+					<sourcesOutputDirectory>${project.build.directory}/generated-sources/gtemplate</sourcesOutputDirectory>
+					<testSourcesOutputDirectory>${project.build.directory}/generated-test-sources/gtemplate</testSourcesOutputDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
