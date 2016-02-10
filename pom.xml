@@ -46,6 +46,11 @@
 					<artifactId>string-template-maven-plugin</artifactId>
 					<version>1.1</version>
 				</plugin>
+				<plugin>
+					<groupId>com.summitsystemsinc.maven</groupId>
+					<artifactId>groovy-template-maven-plugin</artifactId>
+					<version>1.0.0</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -59,6 +64,11 @@
 				<groupId>com.digitalpetri.opcua</groupId>
 				<artifactId>ua-server</artifactId>
 				<version>0.4.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.digitalpetri.opcua</groupId>
+				<artifactId>ua-client</artifactId>
+				<version>1.0.4</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
