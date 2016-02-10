@@ -1,7 +1,7 @@
 //TODO support characters. Variant doesnt know anything about them.
 types=[
 	["String",["java.lang.String","String"],"String"],
-	["Byte","byte","Byte"],
+	["Byte","byte","SByte"],
 	//["Char","char","Byte"],
 	["Short","short","Int16"],
 	["Integer","int","Int32"],

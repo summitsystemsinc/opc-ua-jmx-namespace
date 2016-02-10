@@ -36,9 +36,11 @@ package com.summitsystemsinc.opc.ua.jmx;
  import com.digitalpetri.opcua.stack.core.types.builtin.DataValue;
  import com.digitalpetri.opcua.stack.core.types.builtin.LocalizedText;
  import com.digitalpetri.opcua.stack.core.types.builtin.NodeId;
+ import com.digitalpetri.opcua.stack.core.types.builtin.StatusCode;
  import com.digitalpetri.opcua.stack.core.types.builtin.Variant;
  import com.digitalpetri.opcua.stack.core.types.builtin.unsigned.UShort;
  import static com.digitalpetri.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
+ import static com.digitalpetri.opcua.stack.core.types.builtin.unsigned.Unsigned.ubyte;
  import com.digitalpetri.opcua.stack.core.types.structured.EndpointDescription;
  import com.digitalpetri.opcua.stack.core.types.structured.UserTokenPolicy;
  import static com.google.common.collect.Lists.newArrayList;
@@ -216,8 +218,8 @@ public class JmxNamespaceTest {
 	}
 
 	@Test
-	public void test4DataValue_${prim}() throws InterruptedException, ExecutionException{
-		LOGGER.info("Test data values for ${prim}");
+	public void test4DataValueRead_${prim}() throws InterruptedException, ExecutionException{
+		LOGGER.info("Test data value reads for ${prim}");
 
 		${dv(prim)}
 		assertNotNull("DataValue Variant was null.", dv.getValue());
@@ -234,8 +236,29 @@ public class JmxNamespaceTest {
     Thread.sleep(REFRESH_SPEED);
     dv = node.readValue().get();
     v = dv.getValue();
-		assertEquals("Value for ${prim} incorrect.",exampleMBean.my_${prim},v.getValue());
+		assertEquals("Read value for ${prim} incorrect.",exampleMBean.my_${prim},v.getValue());
 	}
+
+  @Test
+	public void test5DataValueWrite_${prim}() throws InterruptedException, ExecutionException{
+    LOGGER.info("Test data value writes for ${prim}");
+
+    ${node(prim)}
+    <% if(prim == 'boolean'){ %>
+      $prim newVal = !exampleMBean.my_$prim;
+    <% }else{ %>
+      $prim newVal = ${prims[prim]["rand"]};
+    <% } %>
+    LOGGER.info("Write to OPC Node \"my_${prim}\" value <{}>",newVal);
+
+    StatusCode c = node.writeValue(new DataValue(new Variant(newVal))).get();
+    assertTrue(String.format("Bad write, Status: %s",c),c.isGood());
+
+    assertEquals("Written value for ${prim} is incorrect.",
+      newVal,
+      exampleMBean.my_${prim}<% if(prim == 'float' || prim == 'double'){ %>
+      , 0.01d<% } %>);
+  }
 <% } %>
 
 	@JMXBean(description = "Example MXBean")
