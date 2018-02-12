@@ -62,11 +62,11 @@ public class DefaultTypes {
 	<% for(def type : types){ %>
 	/**
 	* <p>
-	* Class for handling JMX/Java type <pre>$type[1]</pre>
+	* Class for handling JMX/Java type <span style="white-space: pre;">${type[1][0]}</span>
 	* </p>
 	* <p>
 	* This class marshals the JMX Attribute to
-	* {@link Identifiers.$type[2]}
+	* {@link Identifiers#${type[2]}}
 	* </p>
 	*
 	* @since 1.0.0
