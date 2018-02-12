@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.summitsystemsinc.opc.ua</groupId>
 	<artifactId>opc-ua-jmx-namespace-parent</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -14,7 +14,7 @@
 	<scm>
 	  <connection>scm:git:https://github.com/summitsystemsinc/opc-ua-jmx-namespace.git</connection>
 	  <developerConnection>scm:git:git@github.com:summitsystemsinc/opc-ua-jmx-namespace.git</developerConnection>
-	  <tag>opc-ua-jmx-namespace-parent-1.0.0</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<licenses>
 		<license>
